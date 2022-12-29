@@ -29,8 +29,8 @@ class UserView(View):
 
         try:
             #comprobamos los datos
-            if len(user['password']) < 3 or len(user['username']) < 3:
-                JsonResponse({"error": "Username o password demasiado cortos"}, status=411)
+            if len(user['password']) < 3 or len(user['username']) < 3 or len(user['bank_account']) < 20:
+                return JsonResponse({"error": "Username o password demasiado cortos"}, status=411)
             
             #ciframos la contraseña            
             saltRounds = bcrypt.gensalt()
@@ -130,5 +130,31 @@ class UserView(View):
 
 
 
+    #función para eliminar un usuario
     def delete(self, request):
-        pass
+        try:
+            token = request.headers['Authorization']
+            decodedToken = jwt.decode(token, os.environ['TOKEN'], algorithms=["HS256"])
+            
+
+            if not token or not decodedToken['id']:
+                return JsonResponse({"error": "Token inválido o ausente"}, status=401)
+
+            user = Usuario.objects.filter(id = decodedToken['id']).first()
+
+            if not user:
+                return JsonResponse({"error": "Token inválido"}, status=401)
+
+            monedero = Monedero.objects.filter(usuario_id = decodedToken['id']).first()
+
+            if not monedero:
+                return JsonResponse({"error": "Problemas con el monedero"}, status=401)
+
+            monedero.delete()
+            user.delete()
+
+            return JsonResponse({"msg": "Eliminado correctamente"}, status=200)
+        
+        except Exception as e:
+            print(e)
+            return JsonResponse({"error": "Error al eliminar el usuario"}, status=500)

@@ -28,6 +28,10 @@ class LoginView(View):
 
         try:
             userDB = Usuario.objects.filter(username = userRequest['username']).first()
+
+            if not userDB:
+                return JsonResponse({'error': 'Usuario no existente'}, status=500)
+
             password = str(userRequest['password']).encode()
             hashed = userDB.password
 
