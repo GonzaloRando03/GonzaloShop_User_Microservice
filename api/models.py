@@ -13,6 +13,6 @@ class Usuario(models.Model):
 
 class Monedero(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT)
-    cantidad = models.PositiveIntegerField()
+    cantidad = models.FloatField()
     limite = models.PositiveIntegerField()
     descuento = models.PositiveIntegerField()
