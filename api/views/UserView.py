@@ -67,6 +67,7 @@ class UserView(View):
             token = jwt.encode(userForToken, os.environ['TOKEN'], algorithm="HS256")
 
             responseData = {
+                    'id': userDB.id,
                     'name': userDB.name,
                     'lastname': userDB.lastname,
                     'username': userDB.username,

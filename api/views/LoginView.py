@@ -46,6 +46,7 @@ class LoginView(View):
                 userWallet = Monedero.objects.filter(usuario_id = userDB.pk).first()
 
                 responseData = {
+                    'id': userDB.id,
                     'name': userDB.name,
                     'lastname': userDB.lastname,
                     'username': userDB.username,
