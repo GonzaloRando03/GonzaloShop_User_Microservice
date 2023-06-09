@@ -57,7 +57,6 @@ class UserView(View):
             )
             wallet.save()
 
-
             #creamos el token 
             userForToken = {
                 'username': userDB.username,
